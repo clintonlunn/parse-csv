@@ -1,6 +1,18 @@
 const csvtojson = require("csvtojson");
 const jsontocsv = require("json2csv").parse;
-const FileSystem = require("fs");
+const fs = require("fs");
+
+
+// make insurance company directory
+const dir = './insurance_companies'
+
+try {
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir)
+    }
+} catch (err) {
+    console.error(err)
+}
 
 
 // create insurance company files
@@ -9,7 +21,7 @@ async function createInsuranceCompanyFiles(source) {
     let uniqueInsurance = await [...new Set(source.map(item => item.Insurance_Company))];
     // write to file
     // uniqueInsurance.map(insuranceCompany => {
-    //     FileSystem.writeFile("./insurance_companies/" + insuranceCompany.replace(/[^0-9a-z]/gi, '') + ".json").catch();
+    //     fs.writeFile("./insurance_companies/" + insuranceCompany.replace(/[^0-9a-z]/gi, '') + ".json").catch();
     // });
     return uniqueInsurance;
 }
@@ -33,7 +45,7 @@ async function getCSV() {
                         // append that object to the insurance file
                         // set up stream
 
-                        FileSystem.appendFile(filepath, JSON.stringify(source[i]) + ", ", (err) => {
+                        fs.appendFile(filepath, JSON.stringify(source[i]) + ", ", (err) => {
                             if (err) throw err;
                             console.log('The "data to append" was appended to file!');
                         });
