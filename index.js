@@ -22,7 +22,6 @@ async function getCSV() {
 
             for (i in uniqueInsurance) {
                 const result = source.filter(element => element.Insurance_Company === uniqueInsurance[i]);
-                console.log(result);
 
                 const keys = Object.keys(source[0]);
                 const csv = jsontocsv(result, {
