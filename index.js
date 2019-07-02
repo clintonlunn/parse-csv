@@ -46,18 +46,6 @@ const compareInsVersions = function (a, b) {
     return b - a
 };
 
-const removeDuplicates = function (data) {
-
-
-    console.log({
-        data
-    });
-    let repeatHolder;
-    for (i in data) {
-        repeatHolder = data[i].First_Name_Last_Name
-    }
-}
-
 function find_duplicate_in_array(arr) {
     var object = {};
     var result = [];
@@ -77,7 +65,6 @@ function find_duplicate_in_array(arr) {
     return result;
 
 }
-
 async function getCSV() {
     return csvtojson().fromFile("./data.csv")
         .then(async source => {
@@ -86,7 +73,17 @@ async function getCSV() {
             for (i in uniqueInsurance) {
                 const result = source.filter(element => element.Insurance_Company === uniqueInsurance[i]);
                 const sortedResult = result.sort(compareNames);
-                const nodDuplicateResult = removeDuplicates(sortedResult);
+                // TODO: sort results, remove First_Name, Last_Name properties (not included in original question)
+
+                let userIdHolder = [];
+                for (i in sortedResult) {
+                    userIdHolder.push(sortedResult[i].Userid);
+                }
+                const duplicates = find_duplicate_in_array(userIdHolder);
+                console.log(duplicates);
+
+
+                // console.log(userIdHolder);
 
 
 
