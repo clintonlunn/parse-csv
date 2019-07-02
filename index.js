@@ -7,7 +7,7 @@ const fs = require("fs");
 const dir = './insurance_companies'
 
 try {
-    if (!fs.existsSync(dir)) {
+    if (!fs.existsSync(dir)) { // if dir doesn't exist, make it
         fs.mkdirSync(dir)
     }
 } catch (err) {
@@ -15,7 +15,17 @@ try {
 }
 
 // sort names by last, then first
-var compareNames = function (a, b) {
+const compareNames = function (a, b) {
+    // split into first name and last name variables
+    const splitStringA = a.First_Name_Last_Name.split(" ");
+    const splitStringB = b.First_Name_Last_Name.split(" ");
+
+    a.First_Name = splitStringA[0];
+    a.Last_Name = splitStringA[splitStringA.length - 1];
+
+    b.First_Name = splitStringB[0];
+    b.Last_Name = splitStringB[splitStringB.length - 1];
+
     if (a.Last_Name < b.Last_Name) {
         return -1;
     }
@@ -31,6 +41,43 @@ var compareNames = function (a, b) {
     return;
 }
 
+// sort by increasing insurance versions
+const compareInsVersions = function (a, b) {
+    return b - a
+};
+
+const removeDuplicates = function (data) {
+
+
+    console.log({
+        data
+    });
+    let repeatHolder;
+    for (i in data) {
+        repeatHolder = data[i].First_Name_Last_Name
+    }
+}
+
+function find_duplicate_in_array(arr) {
+    var object = {};
+    var result = [];
+
+    arr.forEach(function (item) {
+        if (!object[item])
+            object[item] = 0;
+        object[item] += 1;
+    })
+
+    for (var prop in object) {
+        if (object[prop] >= 2) {
+            result.push(prop);
+        }
+    }
+
+    return result;
+
+}
+
 async function getCSV() {
     return csvtojson().fromFile("./data.csv")
         .then(async source => {
@@ -39,15 +86,14 @@ async function getCSV() {
             for (i in uniqueInsurance) {
                 const result = source.filter(element => element.Insurance_Company === uniqueInsurance[i]);
                 const sortedResult = result.sort(compareNames);
-                console.log({
-                    sortedResult
-                });
+                const nodDuplicateResult = removeDuplicates(sortedResult);
+
+
 
                 const keys = Object.keys(source[0]);
                 const csv = jsontocsv(sortedResult, {
                     fields: keys
                 });
-
                 fs.writeFileSync(dir + "/" + uniqueInsurance[i], csv);
             }
         }).catch();
