@@ -69,8 +69,6 @@ const removeDups = (companies) => {
         } else {
             return (companies[index].Userid === companies[index - 1].Userid) ? false : true;
         }
-
-
     });
     return noDups;
 }
